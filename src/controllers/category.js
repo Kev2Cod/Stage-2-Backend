@@ -49,43 +49,23 @@ exports.addCategory = async (req, res) => {
     }
 };
 
-// ============ GET DETAIL PRODUCT ========
-exports.getDetailProduct = async (req, res) => {
+// ============ GET DETAIL CATEGORY ========
+exports.getDetailCategory = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const products = await product.findOne({
+        const categories = await category.findOne({
             where: { id },
-            include: [
-                {
-                    model: user,
-                    as: "seller",
-                    attributes: {
-                        exclude: ["password", "createdAt", "updatedAt"],
-                    },
-                },
-                {
-                    model: category,
-                    as: "categories",
-                    through: {
-                        modul: productCategory,
-                        as: "bridge",
-                    },
-                    attributes: {
-                        exclude: ["idUser", "createdAt", "updatedAt"],
-                    },
-                },
-            ],
             attributes: {
-                exclude: ["idUser", "createdAt", "updatedAt"],
-            },
+                exclude: ["createdAt", "updatedAt"]
+            }
         });
 
         res.status(200).send({
             status: "Success",
-            message: `Get detail product: ${id} success`,
+            message: `Get detail category id: ${id} success`,
             data: {
-                products: products,
+                category: categories,
             },
         });
     } catch (error) {
@@ -97,34 +77,23 @@ exports.getDetailProduct = async (req, res) => {
     }
 };
 
-// ============ UPDATED PRODUCT ========
-exports.updateProduct = async (req, res) => {
+// ============ UPDATED CATEGORY ==============
+exports.updateCategory = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const data = req.body;
-        let updateProduct = await product.update(
-            {
-                ...data,
-                image: req.file.filename,
-                idUser: req.user.id,
-            },
+        let updateCategory = await category.update(req.body,
             { where: { id } }
         );
-        console.log('update product: ' + updateProduct)
-
-        updateProduct = JSON.parse(JSON.stringify(updateProduct));
-
-        updateProduct = {
-            ...updateProduct,
-            image: process.env.FILE_PATH + updateProduct.image,
-        };
 
         res.status(200).send({
             status: "Success",
             message: `Update product at id: ${id} success`,
             data: {
-                products: updateProduct,
+                category: {
+                    id: id,
+                    name: req.body.name
+                }
             },
         });
     } catch (error) {

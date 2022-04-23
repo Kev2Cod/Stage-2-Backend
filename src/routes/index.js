@@ -8,7 +8,7 @@ const { getTransaction, addTransaction } = require("../controllers/transaction")
 const { register, login } = require("../controllers/auth");
 const { auth } = require("../middlewares/auth");
 const { uploadFile } = require("../middlewares/uploadFile");
-const { getCategory, addCategory, deleteCategory } = require("../controllers/category");
+const { getCategory, addCategory, deleteCategory, updateCategory, getDetailCategory } = require("../controllers/category");
 
 // Users
 router.post("/user", addUser);
@@ -26,8 +26,10 @@ router.delete("/product/:id", auth, deleteProduct);
 
 // Categories
 router.get('/categories', auth, getCategory)
+router.get('/category/:id', auth, getDetailCategory)
 router.post('/category', auth, addCategory)
 router.delete('/category/:id', auth, deleteCategory)
+router.patch('/category/:id', auth, updateCategory)
 
 // Transaction
 router.get("/transactions", getTransaction);

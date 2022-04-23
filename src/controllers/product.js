@@ -130,7 +130,6 @@ exports.getDetailProduct = async (req, res) => {
 // ============ UPDATED PRODUCT ========
 exports.updateProduct = async (req, res) => {
   const { id } = req.params;
-
   try {
     const data = req.body;
     let updateProduct = await product.update(
@@ -141,13 +140,12 @@ exports.updateProduct = async (req, res) => {
       },
       { where: { id } }
     );
-    console.log( 'update product: ' + updateProduct)
 
-    updateProduct = JSON.parse(JSON.stringify(updateProduct));
+    updateProduct = JSON.parse(JSON.stringify(data));
 
     updateProduct = {
       ...updateProduct,
-      image: process.env.FILE_PATH + updateProduct.image,
+      image: process.env.FILE_PATH + req.file.filename,
     };
 
     res.status(200).send({
@@ -180,7 +178,7 @@ exports.deleteProduct = async (req, res) => {
       message: `Delete product: ${id} success`,
       data: {
         products: {
-          id: {id}
+          id: { id }
         },
       },
     });
