@@ -4,7 +4,7 @@ const router = express.Router();
 
 const { addUser, getUsers, getUser, updateUser, deleteUser } = require("../controllers/user");
 const { getProduct, addProduct, getDetailProduct, updateProduct, deleteProduct } = require("../controllers/product");
-const { getTransaction, addTransaction } = require("../controllers/transaction");
+const { getTransaction, buyProduct } = require("../controllers/transaction");
 const { register, login } = require("../controllers/auth");
 const { auth } = require("../middlewares/auth");
 const { uploadFile } = require("../middlewares/uploadFile");
@@ -32,8 +32,8 @@ router.delete('/category/:id', auth, deleteCategory)
 router.patch('/category/:id', auth, updateCategory)
 
 // Transaction
-router.get("/transactions", getTransaction);
-router.post("/transaction", addTransaction);
+router.get("/transactions", auth, getTransaction);
+router.post("/transaction", auth, buyProduct);
 
 // Login & Register
 router.post("/register", register);
