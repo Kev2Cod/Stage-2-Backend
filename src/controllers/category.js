@@ -82,17 +82,24 @@ exports.updateCategory = async (req, res) => {
     const { id } = req.params;
 
     try {
-        let updateCategory = await category.update(req.body,
+        const data = req.body
+        console.log(data)
+        let updateCategory = await category.update({
+            ...data
+        },
             { where: { id } }
         );
+
+        console.log(updateCategory)
 
         res.status(200).send({
             status: "Success",
             message: `Update product at id: ${id} success`,
+            data: data,
             data: {
                 category: {
                     id: id,
-                    name: req.body.name
+                    data: data
                 }
             },
         });

@@ -9,13 +9,7 @@ const { register, login } = require("../controllers/auth");
 const { auth } = require("../middlewares/auth");
 const { uploadFile } = require("../middlewares/uploadFile");
 const { getCategory, addCategory, deleteCategory, updateCategory, getDetailCategory } = require("../controllers/category");
-
-// Users
-router.post("/user", addUser);
-router.get("/users", getUsers);
-router.get("/user/:id", getUser);
-router.patch("/user/:id", updateUser);
-router.delete("/user/:id", deleteUser);
+const { addProfile } = require("../controllers/profile")
 
 // Products
 router.get("/products", getProduct);
@@ -38,5 +32,8 @@ router.post("/transaction", auth, buyProduct);
 // Login & Register
 router.post("/register", register);
 router.post("/login", login);
+
+// Profile
+router.post("/profile", auth, addProfile)
 
 module.exports = router;

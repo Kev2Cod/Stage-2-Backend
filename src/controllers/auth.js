@@ -1,4 +1,4 @@
-const { user } = require("../../models");
+const { user, profile } = require("../../models");
 
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
@@ -76,6 +76,15 @@ exports.login = async (req, res) => {
       where: {
         email: req.body.email,
       },
+      include: [
+        {
+          model: profile,
+          as: "profile",
+          attributes: {
+            exclude: ["idUser","createdAt", "updatedAt"],
+          }
+        }
+      ],
       attributes: {
         exclude: ["createdAt", "updatedAt"],
       },
@@ -105,9 +114,12 @@ exports.login = async (req, res) => {
       status: "Success",
       message: "Berhasil Login",
       data: {
-        name: userExist.name,
-        email: userExist.email,
-        status: userExist.status,
+        user: {
+          name: userExist.name,
+          email: userExist.email,
+          status: userExist.status,
+          profile: userExist.profile,
+        },
         token,
       },
     });

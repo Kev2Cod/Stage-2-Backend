@@ -49,7 +49,7 @@ exports.getProduct = async (req, res) => {
 exports.addProduct = async (req, res) => {
   try {
     const data = req.body;
-
+    console.log(data)
     let newProduct = await product.create({
       ...data,
       image: req.file.filename,
@@ -98,7 +98,7 @@ exports.getDetailProduct = async (req, res) => {
           model: category,
           as: "categories",
           through: {
-            modul: productCategory,
+            model: productCategory,
             as: "bridge",
           },
           attributes: {
@@ -132,6 +132,7 @@ exports.updateProduct = async (req, res) => {
   const { id } = req.params;
   try {
     const data = req.body;
+    console.log(data)
     let updateProduct = await product.update(
       {
         ...data,
