@@ -3,7 +3,7 @@ const { product, user, category, productCategory } = require("../../models");
 // ============== GET PRODUCTS ===============
 exports.getProduct = async (req, res) => {
   try {
-    const products = await product.findAll({
+    let products = await product.findAll({
       include: [
         {
           model: user,
@@ -20,14 +20,24 @@ exports.getProduct = async (req, res) => {
             as: "bridge",
           },
           attributes: {
-            exclude: ["idUser", "createdAt", "updatedAt"],
+            exclude: ["createdAt", "updatedAt"],
           },
         },
       ],
       attributes: {
-        exclude: ["createdAt", "updatedAt"],
+        exclude: ["idUser","createdAt", "updatedAt"],
       },
     });
+
+    products = JSON.parse(JSON.stringify(products))
+
+    // Map
+    products = products.map((item)=>{
+      return{
+        ...item,
+        image: process.env.FILE_PATH + item.image
+      }
+    })
 
     res.status(200).send({
       status: "Success",
@@ -48,27 +58,24 @@ exports.getProduct = async (req, res) => {
 // ============== ADD PRODUCTS ===============
 exports.addProduct = async (req, res) => {
   try {
-    const data = req.body;
-    console.log(data)
-    let newProduct = await product.create({
-      ...data,
+    const newProduct = req.body;
+    let products = await product.create({
+      ...newProduct,
       image: req.file.filename,
       idUser: req.user.id, // diambil dari token
     });
 
-    newProduct = JSON.parse(JSON.stringify(newProduct));
+    products = JSON.parse(JSON.stringify(products));
 
-    newProduct = {
-      ...newProduct,
-      image: process.env.FILE_PATH + newProduct.image,
+    products = {
+      ...products,
+      image: process.env.FILE_PATH + products.image,
     };
 
     res.status(200).send({
       status: "Success",
       message: "Add Product Success",
-      data: {
-        newProduct,
-      },
+      data: products,
     });
   } catch (error) {
     console.log(error);
@@ -84,7 +91,7 @@ exports.getDetailProduct = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const products = await product.findOne({
+    let products = await product.findOne({
       where: { id },
       include: [
         {
@@ -110,6 +117,13 @@ exports.getDetailProduct = async (req, res) => {
         exclude: ["idUser", "createdAt", "updatedAt"],
       },
     });
+
+    products = JSON.parse(JSON.stringify(products));
+
+    products = {
+      ...products,
+      image:  process.env.FILE_PATH + products.image
+    }
 
     res.status(200).send({
       status: "Success",

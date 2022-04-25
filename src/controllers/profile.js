@@ -14,7 +14,7 @@ exports.addProfile = async (req, res) => {
 
         res.status(200).send({
             status: "Success",
-            message: "Add user success",
+            message: "Add profile success",
             data: {
                 profile: {
                     addProfile

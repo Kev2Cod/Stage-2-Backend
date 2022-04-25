@@ -23,6 +23,20 @@ exports.register = async (req, res) => {
   }
 
   try {
+    // Cek Email
+    const email = await user.findOne({
+      where: {
+        email: req.body.email
+      }
+    })
+
+    if (email) {
+      return res.status(401).send({
+        status: "failed",
+        message: "Email telah terdaftar",
+      });
+    }
+
     // Hashed Password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -81,7 +95,7 @@ exports.login = async (req, res) => {
           model: profile,
           as: "profile",
           attributes: {
-            exclude: ["idUser","createdAt", "updatedAt"],
+            exclude: ["idUser", "createdAt", "updatedAt"],
           }
         }
       ],
@@ -118,9 +132,9 @@ exports.login = async (req, res) => {
           name: userExist.name,
           email: userExist.email,
           status: userExist.status,
+          token,
           profile: userExist.profile,
         },
-        token,
       },
     });
   } catch (error) {

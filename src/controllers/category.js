@@ -94,12 +94,11 @@ exports.updateCategory = async (req, res) => {
 
         res.status(200).send({
             status: "Success",
-            message: `Update product at id: ${id} success`,
-            data: data,
+            message: `Update category at id: ${id} success`,
             data: {
                 category: {
                     id: id,
-                    data: data
+                    name: data.name
                 }
             },
         });
